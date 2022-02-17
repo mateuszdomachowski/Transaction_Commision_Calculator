@@ -4,8 +4,8 @@ package com.example.transaction_commission_calculator.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,17 +20,15 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long customerId;
 
-    @Column(name = "customer_first_name")
+    @Column(name = "customer_first_name", nullable = false)
     private String customerFirstName;
 
-    @Column(name = "customer_last_name")
+    @Column(name = "customer_last_name", nullable = false)
     private String customerLastName;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "customer_transaction",
-            joinColumns = {@JoinColumn (name = "customer_id")},
-            inverseJoinColumns = {@JoinColumn (name = "transaction_id")})
-    private Set<Transaction> transactions = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "customer_id", referencedColumnName = "customerId")
+    List<Transaction> transactionList = new ArrayList<>();
 
     public Customer(String customerFirstName, String customerLastName) {
         this.customerFirstName = customerFirstName;
